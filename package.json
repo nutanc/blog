@@ -1,0 +1,14 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "Eleventy blog deployed on Cloudflare Pages",
+  "type": "commonjs",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "debug": "DEBUG=Eleventy* eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.6"
+  }
+}

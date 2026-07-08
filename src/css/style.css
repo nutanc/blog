@@ -1,0 +1,53 @@
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.site-title {
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.site-header nav a {
+  margin-left: 1rem;
+  color: inherit;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.post-date {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.site-footer {
+  margin-top: 3rem;
+  color: #888;
+  font-size: 0.85em;
+}
