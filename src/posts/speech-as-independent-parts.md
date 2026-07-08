@@ -15,23 +15,23 @@ The dominant way to build a recognizer today is end-to-end: audio in, text out, 
 
 This experiment is the opposite bet: **break the problem into parts, where each part does exactly one thing, and the interfaces between them are explicit.** Concretely, the pipeline has four components, and each has a single job:
 
-**The embedding (HuBERT) does perception.** It turns raw waveforms into a space where phonetically similar sounds land near each other, across speakers and recording conditions. This is the hard, expensive, learned part — and in this design it runs *offline, once*. It is not consulted at recognition time in the encoder-free variant.
+**The embedding (HuBERT) does perception.** It turns raw waveforms into a space where phonetically similar sounds land near each other, across speakers and recording conditions. This is the hard, expensive, learned part — and in this design it runs *offline, once*. We run that to create clusters to find the centroids. 
 
-**The codebook (2000 k-means centroids) does discretization.** It converts the continuous perceptual space into a finite inventory of reusable units. Nothing else. It has no opinion about language; it's a frozen lookup table you could print out.
+**The codebook (2000 k-means centroids) does discretization.** It converts the continuous perceptual space into a finite inventory of reusable units. Nothing else. It has no opinion about language; it's a frozen lookup table you could print out. This was a huge surprise to us. The fact that we don't need all the points in the space. Just 2000 points in this space are enough to model human speech. We can literally print out the values in a sheet of paper :).
 
-**The CTC model does transduction.** It maps unit sequences to character sequences — learning, essentially, the pronunciation-to-spelling regularities of English. At 17 MB it's tiny, because that's all it has to know.
+**The CTC model does transduction.** It maps unit sequences to character sequences — learning, essentially, the pronunciation-to-spelling regularities of English. At 17 MB it's tiny, because that's all it has to know. Ideally, this CTC we should be able to swap with other language CTC to get similar results(of course the embedding should also be multiple lingual. MMS from Meta might be a better bet).
 
-**The language model does prior knowledge.** A standard 3-gram LM contributes what English words and phrases are likely. And it matters a lot: greedy decoding gives 20.8% WER, the LM brings it to 9.1%. Which is itself informative — a good chunk of "recognition" is not in the acoustics at all, it's in knowing the language.
+**The language model does prior knowledge.** A standard 3-gram LM contributes what English words and phrases are likely. And it matters a lot: greedy decoding gives 20.8% WER, the LM brings it to 9.1%. Which is itself informative — a good chunk of "recognition" is not in the acoustics at all, it's in knowing the language. Rather than have an LLM learn the correct words etc, we use an LM which gives us more control at a smaller size.
 
 None of these components saw each other during training. They compose because the interfaces are explicit: an embedding space, a codebook, a unit sequence, a character lattice. When performance is bad, you can localize the fault. When one part improves, you swap it in. Try doing either with a monolith.
 
 ## The interface is the interesting design decision
 
-Two findings from this experiment are, I think, the genuinely useful ones — both are about interfaces, not accuracy.
+Two findings from this experiment are, I think, the genuinely useful ones
 
 **First: hand off the centroid *vector*, not the cluster *ID*.** The CTC's input is the centroid's actual 768-d vector, so its input space is the embedding space snapped to 2000 points. A wrong-but-nearby cluster assignment becomes a small numerical perturbation instead of a completely different symbol, and the system degrades gracefully. Discreteness for modularity, geometry for robustness — you can have both.
 
-**Second: the consumer must be adapted to the producer.** When I replaced HuBERT at inference with a small transformer that predicts embeddings from plain filterbank features, the predictions were *more* faithful to HuBERT's embeddings than the codebook quantization itself (cosine 0.788 vs the 0.722 centroid floor) — and yet the frozen CTC performed terribly on them (46% WER), because it had never seen this front-end's output distribution. Retraining the CTC on the new front-end's outputs dropped encoder-free WER to **19.9%**. Fidelity to an interface on paper isn't enough; distributions have to match. (Also notable: the naive approach — classify the cluster ID from local features — hit a hard 48% frame-accuracy ceiling that survived 20× data and every architecture change. Regressing the embedding instead broke it. The framing was the bottleneck, not the information.)
+**Second: the consumer must be adapted to the producer.** Can we replace HuBert with other embeddings. Can we create embeddings without training. This is the more important experiment in our opinion which can lead us to some real results.
 
 ## Why doesn't anyone publish the centroids?
 
