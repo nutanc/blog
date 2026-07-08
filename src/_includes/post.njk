@@ -1,8 +1,11 @@
 ---
 layout: base.njk
 ---
-<article>
+<article class="post">
+  <p class="post-eyebrow"><a href="/">&larr; All posts</a></p>
   <h1>{{ title }}</h1>
-  <p class="post-date">{{ date | date }}</p>
-  {{ content | safe }}
+  <p class="post-meta">{{ date | date }}</p>
+  <div class="post-body">
+    {{ content | safe }}
+  </div>
 </article>
