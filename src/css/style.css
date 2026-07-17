@@ -131,6 +131,43 @@ h1 {
   border-radius: 3px;
 }
 
+.post-body pre {
+  overflow-x: auto;
+  background: color-mix(in srgb, var(--rule) 35%, transparent);
+  padding: 0.9rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.post-body pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-body table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 1.5rem 0;
+}
+
+.post-body th,
+.post-body td {
+  border: 1px solid var(--rule);
+  padding: 0.35rem 0.7rem;
+  text-align: left;
+}
+
+.post-body th {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
 .post-body blockquote {
   margin: 1.5rem 0;
   padding-left: 1rem;
