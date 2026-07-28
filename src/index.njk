@@ -2,11 +2,29 @@
 layout: base.njk
 title: Home
 ---
+{% for series in collections.seriesList %}
+<section class="series">
+  <h2 class="series-title">{{ series.name }}</h2>
+  <ol class="series-list">
+    {% for post in series.posts %}
+    <li class="series-item">
+      <span class="series-part">Part {{ post.data.part }}</span>
+      <a class="post-item-title" href="{{ post.url }}">{{ post.data.title }}</a>
+      <span class="post-item-date">{{ post.date | date }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endfor %}
+
+{% if collections.standalonePosts.length %}
+{% if collections.seriesList.length %}<h2 class="series-title">Other writing</h2>{% endif %}
 <ul class="post-list">
-  {% for post in collections.posts %}
+  {% for post in collections.standalonePosts %}
   <li class="post-item">
     <span class="post-item-date">{{ post.date | date }}</span>
     <a class="post-item-title" href="{{ post.url }}">{{ post.data.title }}</a>
   </li>
   {% endfor %}
 </ul>
+{% endif %}

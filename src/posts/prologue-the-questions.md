@@ -3,6 +3,8 @@ layout: post.njk
 title: "Prologue: The Questions"
 date: 2026-07-19
 permalink: /posts/prologue-the-questions/
+series: "ASR From Scratch"
+part: 0
 ---
 
 Before the experiments, the questions. This whole series is really just a long attempt to
