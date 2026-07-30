@@ -654,16 +654,16 @@ As a result, the classifier receives much stronger features.
 # Which Techniques Help Most?
 
 | Technique | Improves Alignment | Improves Classification | Overall Impact |
-|------------|-------------------|-------------------------|----------------|
-| CTC Auxiliary Loss |  |  | Very High |
-| Larger Classifier |  |  | High |
-| Label Smoothing |  |  | Very High |
-| Weight Tying |  |  | High |
-| Stronger Decoder |  |  | Very High |
-| Scheduled Sampling |  |  | High |
-| Better Language Model |  |  | Very High |
-| SpecAugment |  |  | Very High |
-| Pretrained Encoder |  |  | Extremely High |
+|------------|:-----------------:|:-----------------------:|----------------|
+| CTC Auxiliary Loss | ✓ | ✓ | Very High |
+| Larger Classifier |  | ✓ | High |
+| Label Smoothing |  | ✓ | Very High |
+| Weight Tying |  | ✓ | High |
+| Stronger Decoder |  | ✓ | Very High |
+| Scheduled Sampling |  | ✓ | High |
+| Better Language Model |  | ✓ | Very High |
+| SpecAugment |  | ✓ | Very High |
+| Pretrained Encoder | ✓ | ✓ | Extremely High |
 
 ---
 
