@@ -3,6 +3,8 @@ layout: post.njk
 title: "Watching attention read speech: cluster-attention maps from a units-to-text transformer"
 date: 2026-07-19
 permalink: /posts/cluster-attention-maps/
+series: "ASR From Scratch"
+part: 3
 ---
 
 In the [frozen-codebook ASR experiment](/posts/speech-as-independent-parts/), the recognizer's entire view of the audio is a sequence of frames snapped to 2000 fixed points — a discrete "phonetic alphabet" of cluster ids. That system decoded the units to text with a CTC model plus a 3-gram language model (9.1% WER). But CTC is conditionally independent frame-by-frame: it never learns the *language*, which is why it leans on the external LM.

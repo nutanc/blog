@@ -3,6 +3,8 @@ layout: post.njk
 title: What I'm trying to learn from my speech recognition experiments
 date: 2026-07-08
 permalink: /posts/asr-experiments-goals/
+series: "ASR From Scratch"
+part: 1
 ---
 
 I've been running a series of experiments around automatic speech recognition (ASR), and I wanted to write down *why* — the goals, not the mechanics — since that's the part that actually stays interesting once a given method is tried, kept, or discarded.

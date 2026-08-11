@@ -3,6 +3,8 @@ layout: post.njk
 title: "Why Attention Isn't the Problem: Understanding Classification Errors in Attention-Based Encoder-Decoder (AED) Models"
 date: 2026-07-26
 permalink: /posts/why-attention-isnt-the-problem/
+series: "ASR From Scratch"
+part: 4
 ---
 
 One of the most common misconceptions when training an **Attention-based Encoder-Decoder (AED)** model for speech recognition is assuming that if the model makes mistakes, the attention mechanism must be failing.

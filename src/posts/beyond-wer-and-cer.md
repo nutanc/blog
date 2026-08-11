@@ -4,6 +4,8 @@ title: "Beyond WER and CER: Why Indian-Language ASR Needs Akshara-Level, Phoneti
 description: "నాకు అర్థం కాలేదు, నాకు అర్తం కాలేదు, and నాకర్థం కాలేదు all mean the same thing — but WER scores them 0%, 33%, and 67% wrong. Based on experiments across six models and two encoders, we show why WER and CER misrepresent quality for abugida scripts, and how AER, PSW-AER, and PSW-CER fix (most of) it."
 date: 2026-07-16
 permalink: /posts/beyond-wer-and-cer/
+series: "ASR From Scratch"
+part: 5
 ---
 
 Our best Telugu ASR model has a **74% word error rate**.

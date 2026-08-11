@@ -3,6 +3,8 @@ layout: post.njk
 title: "Speech recognition as independent parts: notes from a frozen-codebook ASR experiment"
 date: 2026-07-08
 permalink: /posts/speech-as-independent-parts/
+series: "ASR From Scratch"
+part: 2
 ---
 
 I recently finished an experiment I've been calling *tiny ASR via a frozen VQ codebook*. The headline number: **9.1% WER on LibriSpeech dev-clean** from a recognizer whose entire view of the audio is a sequence of frames snapped to 2000 fixed points, decoded by a 17 MB model plus a 3-gram language model.
