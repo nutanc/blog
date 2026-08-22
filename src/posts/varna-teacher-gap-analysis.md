@@ -218,7 +218,3 @@ In priority order, all driven by today's numbers:
    biggest per-language win available, ~15–20 points by our estimate.
 5. **Sentence-end supervision** for Hindi/Telugu, plus punctuated eval rows so
    the `</s>` token can actually be tested.
-6. **Telephony domain adaptation** — varna's deployment target is 8 kHz call
-   audio, which it has never seen. A small HuBERT-style continued-pretraining
-   POC on unlabeled call recordings is scoped and gated on a domain-gap
-   measurement, sequenced after distillation so wins stay attributable.
