@@ -222,7 +222,3 @@ In priority order, all driven by today's numbers:
    audio, which it has never seen. A small HuBERT-style continued-pretraining
    POC on unlabeled call recordings is scoped and gated on a domain-gap
    measurement, sequenced after distillation so wins stay attributable.
-
-*varna is part of our speech stack alongside Svarna, its unsupervised
-discrete-token sibling. Both target the same goal: robust, lightweight,
-Indian-language-first speech understanding.*
