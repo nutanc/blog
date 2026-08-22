@@ -3,6 +3,8 @@ layout: post.njk
 title: "How far can a 93M phone recognizer go? Auditing varna against its 600M teacher across 12 Indian languages"
 date: 2026-08-22
 permalink: /posts/varna-teacher-gap-analysis/
+series: "Varna"
+part: 1
 ---
 
 **TL;DR** — Our 93M-parameter phone recognizer *varna* reads speech in 11 Indic
