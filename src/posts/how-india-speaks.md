@@ -16,6 +16,8 @@ how the G2P labels themselves carry per-language "accents" that any shared
 phone model has to silently learn. Full numbers and scripts are in the repo;
 headline findings below.
 
+![How India Speaks: a one-page phonetic analysis of the varna multilingual recognizer, covering speaking rate, phone-class fingerprints, label accents, and whether mechanics predict difficulty.](/img/varna/how-india-speaks-overview.png)
+
 ## Speaking rate: everyone transmits at roughly the same speed — differently
 
 Median rates over all training clips (phones exclude word boundaries and
