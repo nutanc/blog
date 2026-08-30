@@ -18,6 +18,8 @@ with rates that track the literature. Roughly **500+ of the substitution
 hearing what was actually said while the label records what the dictionary
 prescribes.
 
+> 🔎 **Explore it yourself:** the [Varna Accent Explorer](/interactive/varna-accent-explorer.html) is an interactive companion to this post — browse the confusion families, per-language merger rates, and the phenomena described below.
+
 ## The setup: canonical labels vs real mouths
 
 varna's training labels come from espeak-ng: text goes in, citation-form IPA
