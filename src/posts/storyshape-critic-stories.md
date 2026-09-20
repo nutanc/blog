@@ -17,6 +17,27 @@ the same seed — so read them as "what the student produced alone" vs "what it
 produced with a critic in the loop," not as one story minus its errors. All output
 is raw: lowercase, and the spacing around quotes is the detokenizer's.
 
+## Enrichment: bland → richer
+
+A different move from the [enrichment pass](/posts/a-critic-in-the-loop/) (the
+soft mode). These sentences were already gate-clean — not *wrong* — but flat or
+unclear, so the student was asked for a few alternatives and the richest gate-clean
+one was swapped in. Dialogue is never touched. A handful of actual swaps:
+
+| the student's flat line | the richer line it was swapped for |
+|---|---|
+| timmy loved to play with his toys and draw. | timmy loved to play with his toys, but his favorite was a big, red ball. |
+| on his journey, sam encountered a scary wolf. | in the forest, sam met a wise owl. |
+| once there was a little girl named lily. | one day, mommy and dad were walking through the park. |
+| that's not our ball. | the ball is too heavy for us. |
+| she decided to take joe to get a peel. | she suggested joe share a banana. |
+
+The first four trade a generic line for a concrete image or setting; the last is
+the *clarity* side — "get a peel" is confusing, "share a banana" is not. All modest
+(the 14M student can only offer what it can write), all additive: if no alternative
+was gate-clean and strictly richer, the original stayed.
+
+---
 
 ## 1  <span style="font-weight:normal;font-size:0.7em;color:#999">(11 sentences, 6 rewrites · natural ending)</span>
 

@@ -100,6 +100,49 @@ caught both bad sentences — but it **flagged a perfectly good line of dialogue
 every story. This is why you test the teacher instead of trusting your intuition
 about it.
 
+A later round put four more candidates through the same gauntlet. Two passed and
+were added: **`no_repetition`** (catches "made sure to make sure" and "take turns
+and take turns" at 0.02, with zero false-fires) and **`explained`** (catches
+unexplained events — a rock that vanishes, a horse that suddenly sings — including
+a case `motivated` missed). The teacher's gate now runs eight axes plus coherence.
+
+But the other two candidates I *couldn't* make into gates, and why they failed is
+the more interesting result — it turned out they weren't gate questions at all.
+
+## Two modes: fix what's wrong, enrich what's flat
+
+The two rejects were **`vivid`** (does the sentence give a sensory detail?) and
+**`physical`** (is the action literally sensible — no "he stitched the rock in
+half"?). Both catch real problems. Both are useless as gates. `vivid` flags every
+line of *dialogue* — a spoken line isn't a description — at 0.12; `physical` flags
+legitimate imagery ("the woods were full of tall, whispering trees") as
+not-literally-true at 0.29. Gate on either and you delete good writing to catch the
+bad, the same trap as `advances`.
+
+The fix was to notice these aren't the same *kind* of judgment. "This sentence is
+wrong" is an error: you reject it and rewrite. "This sentence is bland," or "this
+word is ambiguous," is not wrong — it's an opportunity, and the right move is to
+*offer* something better, not to reject. So the teacher runs in **two modes**:
+
+- **The gate** — the eight axes. A sentence that fails is rejected and resampled
+  until it passes. This is for *errors*: grammar, coreference, drift, repetition,
+  unexplained turns.
+- **The enrichment pass** (opt-in) — a gate-clean sentence that scores low on
+  *detail* or *clarity* is left in place, but the student resamples a few
+  alternatives, and one is swapped in **only if** it's gate-clean *and* strictly
+  richer. It **skips dialogue entirely**, and the original always survives if
+  nothing better turns up. Additive, never subtractive.
+
+That "skip dialogue, keep the original by default" design is exactly what makes
+enrichment safe where a gate was not. In practice it trades bland lines up —
+*"that's not our ball"* → *"the ball is too heavy for us"*; a flat opening →
+*"one day, mommy and dad were walking through the park"* — while every line of
+dialogue passes through untouched. The gains are modest (the 14M student can only
+offer what it can write, so "richer" means "richest of a few samples") and it costs
+extra critic calls, which is why it's optional. But it gives the two failure
+families their own homes: **the gate fixes what's wrong; the enrichment pass
+improves what's merely flat.**
+
 ## Judge the whole story, but blame the right sentence
 
 One subtlety cost me a version. The critic judges the story cumulatively, which is
@@ -156,6 +199,18 @@ scale), and 150 stories is still small — a few thousand would sharpen every nu
 But the *direction* is now unambiguous, and it came from a teacher that never wrote
 a word. It only told the student which of its own sentences to keep.
 
+One more experiment, and an honest negative. I re-ran the whole harvest with the
+**enrichment pass** switched on, so the corrected stories carried the richer lines
+too, and fine-tuned on *those*. On the error axes the result was about the same —
+but the vividness axis it was supposed to lift went the *wrong* way (**detail
+0.69 → 0.59**). Two reasons. Enrichment only touches about one sentence per story,
+so it's a thin signal in the training set; and RFT's dominant pull toward coherence
+and clean endings quietly trades a little vividness away (coherence still rose,
++0.16). The lesson is a clean one about where each tool belongs: **the enrichment
+pass is a generation-time move — it swaps a bland line for a richer one while it's
+running — not a training signal you can bake into the weights at this scale.** The
+gate transfers; enrichment performs.
+
 If you want to read the model's actual output rather than take my word for the
 numbers, [every story from the harvest — all 150, raw vs teacher-guided](/posts/a-critic-in-the-loop-stories/)
 is collected in an appendix.
@@ -164,8 +219,9 @@ is collected in an appendix.
 
 The series has now found three levers, and they're distinct. **Data** buys
 fluency. **Structure** buys control. And a **critic** buys targeted, local
-correction — aimed squarely at the meaning gap that data and structure both left
-open. None of them is a bigger model, and that's the point: the student is small
+correction — in two modes, rejecting what's *wrong* and enriching what's *flat* —
+aimed squarely at the meaning gap that data and structure both left open. None of
+them is a bigger model, and that's the point: the student is small
 enough that the ceiling isn't its capacity, it's the signal it learns from. A
 calibrated critic is a very good signal. It can't invent a plot the student could
 never have written — best-of-a-few can only pick from what the 14M produces — but
