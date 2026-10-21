@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shape Match</title>
+<meta name="description" content="Films matched by the shape of their story, not their genre.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--ground:#EEF1F4;--paper:#F8F9FB;--ink:#1B2430;--ink-2:#4A5563;--ink-3:#7C8794;--rule:#D5DAE1;--blue:#2F5BAA;--blue-soft:#DCE5F6;--amber:#D08A1E;--amber-soft:#F6E7C9;--red:#B5443A;--red-soft:#F3D9D6;--sage:#5E8A6E;--chip:#E6EAF0;--guide:#C9D0DA;
+ --display:"Fraunces",Georgia,serif;--body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;--mono:"IBM Plex Mono",Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--ground:#141A22;--paper:#1C242E;--ink:#E7EBF0;--ink-2:#B8C0CB;--ink-3:#8A94A1;--rule:#2E3845;--blue:#7FA0E6;--blue-soft:#243552;--amber:#E3A54A;--amber-soft:#3B3220;--red:#E07A70;--red-soft:#3E2826;--sage:#8DBB9C;--chip:#2A3441;--guide:#3A4552}}
+:root[data-theme="dark"]{color-scheme:dark;--ground:#141A22;--paper:#1C242E;--ink:#E7EBF0;--ink-2:#B8C0CB;--ink-3:#8A94A1;--rule:#2E3845;--blue:#7FA0E6;--blue-soft:#243552;--amber:#E3A54A;--amber-soft:#3B3220;--red:#E07A70;--red-soft:#3E2826;--sage:#8DBB9C;--chip:#2A3441;--guide:#3A4552}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.5;padding-block:0 56px;padding-inline:16px}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:var(--blue)}
+header{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding-block:24px 14px;border-bottom:1px solid var(--rule)}
+h1{font-family:var(--display);font-size:30px;font-weight:600;margin:0 14px 0 0;letter-spacing:-.01em}
+.search{position:relative;flex:1 1 280px;max-width:460px}
+.search input{width:100%;font:inherit;font-size:15.5px;padding:9px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink)}
+.search input:focus{outline:2px solid var(--blue);outline-offset:1px}
+.sugg{position:absolute;top:100%;left:0;right:0;background:var(--paper);border:1px solid var(--rule);border-radius:6px;z-index:5;max-height:300px;overflow:auto;display:none}
+.sugg div{padding:7px 12px;cursor:pointer;font-size:14.5px}.sugg div:hover,.sugg div.on{background:var(--blue-soft)}
+.sugg small{color:var(--ink-3);margin-left:6px}
+.btn{font:inherit;font-size:14px;padding:8px 13px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--blue)} .btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)} .btn.on{background:var(--blue-soft);border-color:var(--blue)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 0 4px}
+.presets .lab{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-right:4px}
+.chipbtn{font:inherit;font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);color:var(--ink-2);cursor:pointer}
+.chipbtn:hover,.chipbtn.on{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
+.sub{font-size:13.5px;color:var(--ink-3);margin:4px 0 0}
+.panel{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:18px 20px;margin:16px 0}
+.film-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.film-head h2{font-family:var(--display);font-size:28px;font-weight:600;margin:0}
+.arch{font-size:14px;color:var(--ink-2)} .arch b{color:var(--ink);font-weight:600}
+.chips{display:inline-flex;flex-wrap:wrap;gap:6px;vertical-align:middle}
+.chip{font-size:12.5px;background:var(--chip);color:var(--ink-2);padding:2px 9px;border-radius:999px}
+.chip.shared{background:var(--blue-soft);color:var(--blue);font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.tag{font-size:13px;border:1px solid var(--rule);border-radius:999px;padding:3px 10px;color:var(--ink-2)}
+.master{margin:12px 0 4px}
+.master svg{display:block;width:100%;height:auto;font-family:var(--mono)}
+.master .grid{stroke:var(--rule);stroke-width:1}.master .guide{stroke:var(--guide);stroke-width:1;stroke-dasharray:3 4}
+.master .tick{font-size:10.5px;fill:var(--ink-3)} .master .ms{font-size:11px;fill:var(--ink-2);font-family:var(--body);font-weight:500}
+.master .mk{font-size:10.5px;fill:var(--ink);font-family:var(--body);font-weight:600}
+.master .fortune{stroke:var(--blue);stroke-width:2.8;fill:none;stroke-linejoin:round}.master .tension{stroke:var(--amber);stroke-width:2.2;fill:none;stroke-dasharray:6 4;stroke-linejoin:round}
+.master .g-fortune{stroke:var(--red);stroke-width:2;fill:none;opacity:.85}.master .g-tension{stroke:var(--red);stroke-width:1.6;fill:none;stroke-dasharray:3 3;opacity:.75}
+.master .area{fill:var(--blue);opacity:.07}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink-2);margin:6px 0 0}
+.legend i{display:inline-block;width:22px;border-top:3px solid var(--blue);vertical-align:middle;margin-right:5px}
+.legend i.t{border-top:2px dashed var(--amber)} .legend i.g{border-top:2px solid var(--red)}
+.cmp{display:none;background:var(--red-soft);border-radius:6px;padding:8px 12px;font-size:14px;margin:10px 0 0}
+.cmp b{font-weight:600}
+details{border-top:1px solid var(--rule);margin-top:12px;padding-top:8px}
+summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:6px 0}
+.spark-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px 16px;margin:6px 0 8px}
+.spark b{display:block;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.spark svg{display:block;width:100%;height:48px}
+.spark .base{stroke:var(--rule);stroke-width:1}.spark .me{stroke:var(--blue);stroke-width:2;fill:none}.spark .other{stroke:var(--red);stroke-width:1.6;fill:none;stroke-dasharray:3 3}
+h3.sec{font-family:var(--display);font-size:20px;font-weight:600;margin:0 0 4px}
+.twins{display:grid;gap:10px;margin-top:10px}
+.twin{display:grid;grid-template-columns:34px 1fr auto;gap:8px 12px;align-items:start;border:1px solid var(--rule);border-radius:8px;padding:12px 14px;background:var(--ground)}
+.twin.on{border-color:var(--red);background:var(--red-soft)}
+.rank{font-family:var(--display);font-size:22px;font-weight:600;color:var(--ink-3);line-height:1.1}
+.twin h4{font-family:var(--display);font-size:18px;font-weight:600;margin:0 0 3px;cursor:pointer}
+.twin h4:hover{text-decoration:underline}
+.align{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:2px 0 4px}
+.align .bar{width:110px;height:6px;background:var(--rule);border-radius:3px;overflow:hidden}.align .bar i{display:block;height:100%;background:var(--blue)}
+.why{font-size:14px;color:var(--ink-2);margin:4px 0 0}
+.twin .act{display:flex;flex-direction:column;gap:6px}
+.draw{display:none;margin-top:10px}
+.draw canvas{width:100%;max-width:640px;height:220px;border:1px solid var(--rule);border-radius:6px;background:var(--ground);touch-action:none;display:block}
+.draw .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px}
+.res{border:1px solid var(--rule);border-radius:6px;padding:10px 12px;background:var(--ground);cursor:pointer}.res:hover{border-color:var(--blue)}
+.res b{display:block;font-family:var(--display);font-size:16px;font-weight:600}.res small{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.sliders{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px 22px;margin-top:6px}
+.sl span{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-3)}input[type=range]{width:100%;accent-color:var(--blue)}
+.note{font-size:13px;color:var(--ink-3);margin:18px 0 0;max-width:80ch}
+.count{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+@media (max-width:640px){.twin{grid-template-columns:28px 1fr}.twin .act{grid-column:1/-1;flex-direction:row}h1{font-size:26px}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Shape Match</h1>
+  <div class="search"><input id="q" type="text" placeholder="Search a film… e.g. Get Out, Dangal, Chasing Amy" autocomplete="off" aria-label="Search a film"><div class="sugg" id="sugg"></div></div>
+  <button class="btn" id="drawbtn">✎ Draw a shape</button>
+  <span class="count" id="count"></span>
+</header>
+<div class="presets"><span class="lab">Shapes</span>
+  <button class="chipbtn" data-preset="man_in_hole">Man in a Hole</button><button class="chipbtn" data-preset="cinderella">Cinderella</button>
+  <button class="chipbtn" data-preset="icarus">Icarus</button><button class="chipbtn" data-preset="fall">Tragic Fall</button>
+  <button class="chipbtn" data-preset="rise">Steady Rise</button><button class="chipbtn" data-preset="oedipus">Oedipus</button>
+  <button class="chipbtn" data-preset="thriller">Relentless Thriller</button><button class="chipbtn" data-preset="late_reveal">Late Reveal</button>
+  <button class="chipbtn" data-preset="happy">Happy Ending</button><button class="chipbtn" data-preset="bleak">Bleak Ending</button>
+</div>
+<p class="sub">Films matched by the <em>shape</em> of their story — how the hero's fortune, the tension, what the audience knows and who holds power move from first page to last — not by genre tag. How the shapes were measured: <a href="https://blog.trulm.com/posts/the-shape-of-a-story/">The Shape of a Story</a>.</p>
+
+<div class="panel draw" id="drawpanel">
+  <h3 class="sec">Draw the hero's fortune, beginning → end</h3>
+  <p class="sub">Drag across the canvas: up is good fortune, down is misfortune. We find the films whose fortune line follows yours.</p>
+  <canvas id="cv" width="640" height="220"></canvas>
+  <div class="row"><button class="btn primary" id="drawgo">Find films with this shape</button><button class="btn" id="drawclear">Clear</button><span class="sub" id="drawmsg"></span></div>
+</div>
+
+<div class="panel" id="results" style="display:none"><h3 class="sec" id="rtitle"></h3><div class="results" id="rlist"></div></div>
+
+<div class="panel" id="film"></div>
+
+<div class="panel"><details><summary>Fine-tune a shape with sliders</summary>
+  <div class="sliders">
+    <div class="sl"><span><span>Reveal timing</span><b id="v_reveal"></b></span><input type="range" id="s_reveal" min="0" max="100" value="85"><span><span>early</span><span>last page</span></span></div>
+    <div class="sl"><span><span>How it ends for the hero</span><b id="v_end"></b></span><input type="range" id="s_end" min="0" max="100" value="85"><span><span>badly</span><span>happily</span></span></div>
+    <div class="sl"><span><span>Tension build</span><b id="v_build"></b></span><input type="range" id="s_build" min="0" max="100" value="70"><span><span>flat</span><span>steady climb</span></span></div>
+    <div class="sl"><span><span>Who knows more</span><b id="v_irony"></b></span><input type="range" id="s_irony" min="0" max="100" value="50"><span><span>we learn with the hero</span><span>we know more</span></span></div>
+    <div class="sl"><span><span>Stakes</span><b id="v_stakes"></b></span><input type="range" id="s_stakes" min="0" max="100" value="70"><span><span>modest</span><span>life or death</span></span></div>
+  </div><div class="results" id="slist"></div></details></div>
+
+<p class="note">Shape alignment is the cosine similarity of two films' standardized 20-position × 13-axis arcs (0.5+ is close in this space; the ranking is what matters). "Because" lists the rarest traits the two films share and the lines that move together. Act markers are the conventional quarter points; the climax marker is this film's tension peak, the reveal marker is where its open puzzle collapses. The master lines are lightly smoothed for reading (each underlying point is a 1–4 rating); the facet sparklines are raw. Genre tags from IMSDb where available; Indian scripts tagged by language. One model's reading of the screenplay; indicators, not verdicts.</p>
+</div>
+<script>
+const NICE={fortune:"hero's fortune",tension:"tension",stakes:"stakes",emotion:"emotion",resolution:"resolved?",new_info:"new information",irony:"audience knows more",mystery:"open puzzle",new_cast:"new characters",scene:"scene change",agency:"hero in control",pressure:"opposition",morality:"hero's morals"};
+const GROUPS=[["Information dynamics",["resolution","new_info","irony","mystery"]],["Pacing & structure",["stakes","emotion","new_cast","scene"]],["Conflict",["agency","pressure","morality"]]];
+const ARCH={rise:"Steady Rise",fall:"Tragic Fall",man_in_hole:"Man in a Hole",icarus:"Icarus",cinderella:"Cinderella",oedipus:"Oedipus"};
+let IDX=[], KEYS=[], byId=new Map(), cache=new Map(), cur=null, ghost=null;
+const $=id=>document.getElementById(id);
+const T=20, xs=i=>i/(T-1);
+function tpl(name){const t=[...Array(T)].map((_,i)=>xs(i));const c=(k,f)=>t.map(v=>Math[f](k*Math.PI*v));
+ return {rise:t,fall:t.map(v=>-v),man_in_hole:c(2,'cos'),icarus:c(2,'cos').map(v=>-v),cinderella:c(3,'cos').map(v=>-v),oedipus:c(3,'cos')}[name];}
+function corr(a,b){const n=a.length,ma=a.reduce((s,v)=>s+v,0)/n,mb=b.reduce((s,v)=>s+v,0)/n;let sa=0,sb=0,sab=0;for(let i=0;i<n;i++){const x=a[i]-ma,y=b[i]-mb;sa+=x*x;sb+=y*y;sab+=x*y}return sa&&sb?sab/Math.sqrt(sa*sb):0}
+function sm(v){return v.map((_,i)=>(v[Math.max(0,i-1)]+v[i]+v[Math.min(v.length-1,i+1)])/3)}
+async function loadIndex(){const r=await fetch('index.json');const d=await r.json();KEYS=d.keys;IDX=d.films;IDX.forEach(f=>byId.set(f.i,f));$('count').textContent=IDX.length.toLocaleString()+' films';}
+async function full(id){const s=Math.floor(id/50);if(!cache.has(s)){const r=await fetch(`films_${String(s).padStart(2,'0')}.json`);const arr=await r.json();cache.set(s,new Map(arr.map(x=>[x.i,x])));}return cache.get(s).get(id);}
+function chips(g,shared){return `<span class="chips">${g.map(x=>`<span class="chip ${shared&&shared.includes(x)?'shared':''}">${x}</span>`).join('')}</span>`}
+function master(f,g){const W=760,H=250,L=36,R=16,Tp=30,B=38,pw=W-L-R,ph=H-Tp-B,x=i=>L+pw*i/(T-1),y=v=>Tp+ph*(1-v);
+ const pts=a=>a.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Story timeline: hero's fortune and tension">`;
+ [0,0.5,1].forEach(v=>s+=`<line class="grid" x1="${L}" x2="${L+pw}" y1="${y(v)}" y2="${y(v)}"/>`);
+ s+=`<text class="tick" x="${L-5}" y="${y(1)+4}" text-anchor="end">high</text><text class="tick" x="${L-5}" y="${y(0)+4}" text-anchor="end">low</text>`;
+ [[0.25,'Act I → II'],[0.5,'Midpoint'],[0.75,'Act III']].forEach(([p,l])=>s+=`<line class="guide" x1="${x(p*(T-1))}" x2="${x(p*(T-1))}" y1="${Tp-4}" y2="${y(0)}"/><text class="ms" x="${x(p*(T-1))}" y="${H-20}" text-anchor="middle">${l}</text>`);
+ s+=`<text class="ms" x="${L}" y="${H-20}">Setup</text><text class="ms" x="${L+pw}" y="${H-20}" text-anchor="end">Ending</text>`;
+ const fa=sm(f.fa),ta=sm(f.ta);                      // display smoothing: each point is an integer rating, so the raw line is stair-stepped
+ s+=`<polygon class="area" points="${x(0)},${y(0)} ${pts(fa)} ${x(T-1)},${y(0)}"/>`;
+ if(g){s+=`<polyline class="g-fortune" points="${pts(sm(g.fa))}"/><polyline class="g-tension" points="${pts(sm(g.ta))}"/>`}
+ s+=`<polyline class="tension" points="${pts(ta)}"/><polyline class="fortune" points="${pts(fa)}"/>`;
+ const cx=x(f.cx*(T-1));s+=`<line class="guide" x1="${cx}" x2="${cx}" y1="${Tp-4}" y2="${y(1)-2}"/><text class="mk" x="${cx}" y="${Tp-8}" text-anchor="middle">▲ climax</text>`;
+ if(f.rv<0.97){const rx=x(f.rv*(T-1));s+=`<text class="mk" x="${rx}" y="${Tp-8}" text-anchor="${f.rv>0.85?'end':'middle'}" fill="var(--ink-2)">● reveal</text>`}
+ return s+'</svg>'}
+function spark(a,j,b){const w=170,h=48,p=4,pt=v=>v.map((y,i)=>`${p+(w-2*p)*i/(T-1)},${p+(h-2*p)*(1-y)}`).join(' ');
+ let s=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><line class="base" x1="${p}" x2="${w-p}" y1="${h-p}" y2="${h-p}"/>`;
+ if(b)s+=`<polyline class="other" points="${pt(b.map(r=>r[j]))}"/>`;return s+`<polyline class="me" points="${pt(a.map(r=>r[j]))}"/></svg>`}
+function why(nb,other){const w=nb.w.length?nb.w.join(', '):'the overall shape';const x=nb.x.length?` — their <b>${nb.x.map(k=>NICE[k]).join(', ')}</b> lines move together`:'';return `Shares <b>${w}</b>${x}.`}
+function cmpText(f,g){const ends=(a,b)=>Math.abs(a-b)<0.15?'the same kind of ending':'different endings';const d=f.fa[T-1]-f.fa[0],e=g.fa[T-1]-g.fa[0];
+ const dir=(d>0.1&&e>0.1)?'both heroes end better off than they began':(d<-0.1&&e<-0.1)?'both heroes end worse off than they began':ends(f.fa[T-1],g.fa[T-1]);
+ const tb=(f.f.tension_build>0.2&&g.f.tension_build>0.2)?'; tension climbs steadily in both':'';return `Overlay: <b>${g.t}</b> in red — ${dir}${tb}. Climax at ${Math.round(f.cx*100)}% vs ${Math.round(g.cx*100)}% of runtime.`}
+async function show(id,ghostId){cur=byId.get(id);const fl=await full(id);ghost=ghostId!=null?byId.get(ghostId):null;const gl=ghost?await full(ghostId):null;
+ const f=cur;const el=$('film');
+ el.innerHTML=`<div class="film-head"><h2>${f.t}</h2>${chips(f.g)}<span class="arch">Fortune shape: <b>${ARCH[f.a]||f.a||'—'}</b></span></div>
+ <div class="tags">${f.p.map(p=>`<span class="tag">${p}</span>`).join('')}</div>
+ <div class="master">${master(f,ghost)}</div>
+ <div class="legend"><span><i></i>hero's fortune</span><span><i class="t"></i>tension</span>${ghost?`<span><i class="g"></i>${ghost.t} (overlay)</span>`:'<span class="sub">choose "Compare overlay" on a twin to ghost its lines here</span>'}</div>
+ <div class="cmp" id="cmp" style="${ghost?'display:block':''}">${ghost?cmpText(f,ghost):''}</div>
+ ${GROUPS.map(([name,ks],gi)=>`<details ${gi===0?'open':''}><summary>${name}</summary><div class="spark-grid">${ks.map(k=>`<div class="spark"><b>${NICE[k]}</b>${spark(fl.a,KEYS.indexOf(k),gl&&gl.a)}</div>`).join('')}</div></details>`).join('')}
+ <h3 class="sec" style="margin-top:18px">Nearest narrative twins</h3><p class="sub">Ranked by how closely all thirteen lines align with ${f.t}.</p>
+ <div class="twins">${fl.n.map((nb,r)=>{const g=byId.get(nb.i);const on=ghost&&ghost.i===nb.i;return `<div class="twin ${on?'on':''}"><div class="rank">${r+1}</div><div><h4 data-go="${nb.i}">${g.t}</h4>${chips(g.g,nb.sg)}<div class="align">shape alignment <span class="bar"><i style="width:${Math.max(4,Math.round(nb.s*100))}%"></i></span>${nb.s.toFixed(2)}${nb.sg.length?'':' · no shared genre'}</div><p class="why">${why(nb)}</p></div><div class="act"><button class="btn ${on?'on':''}" data-cmp="${nb.i}">${on?'Overlay on ⇄':'Compare overlay ⇄'}</button><button class="btn" data-go="${nb.i}">Open</button></div></div>`}).join('')}</div>`;
+ el.querySelectorAll('[data-cmp]').forEach(b=>b.onclick=()=>show(f.i,ghost&&ghost.i===+b.dataset.cmp?null:+b.dataset.cmp));
+ el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{show(+b.dataset.go);$('q').value=byId.get(+b.dataset.go).t;window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-16,behavior:'smooth'})});}
+function results(title,list){$('rtitle').textContent=title;$('results').style.display='';$('rlist').innerHTML=list.map(({f,score})=>`<div class="res" data-go="${f.i}"><b>${f.t}</b><small>${f.g.slice(0,3).join(' · ')||'—'}${score!=null?' · match '+score.toFixed(2):''}</small><div class="sub">${f.p.slice(0,2).join(', ')}</div></div>`).join('');
+ $('rlist').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{$('q').value=byId.get(+b.dataset.go).t;show(+b.dataset.go);});}
+function preset(name){document.querySelectorAll('.chipbtn').forEach(b=>b.classList.toggle('on',b.dataset.preset===name));let sc;
+ if(name==='thriller')sc=IDX.map(f=>({f,score:(f.ta.reduce((s,v)=>s+v,0)/T)*0.6+f.f.stakes*0.4}));
+ else if(name==='late_reveal')sc=IDX.map(f=>({f,score:f.rv>=0.9?f.rv+(1-Math.abs(f.f.ending_fortune-0.5))*0.1:0}));
+ else if(name==='happy')sc=IDX.map(f=>({f,score:f.f.ending_fortune}));
+ else if(name==='bleak')sc=IDX.map(f=>({f,score:1-f.f.ending_fortune}));
+ else{const t=tpl(name);sc=IDX.map(f=>({f,score:corr(sm(f.fa),t)}));}
+ sc.sort((a,b)=>b.score-a.score);results(`${document.querySelector(`[data-preset="${name}"]`).textContent} — closest films`,sc.slice(0,12));}
+document.querySelectorAll('.chipbtn').forEach(b=>b.onclick=()=>preset(b.dataset.preset));
+// search
+const q=$('q'),sg=$('sugg');let sel=-1,matches=[];
+q.addEventListener('input',()=>{const v=q.value.trim().toLowerCase();if(!v){sg.style.display='none';return}matches=IDX.filter(f=>f.t.toLowerCase().includes(v)).slice(0,10);sel=-1;
+ sg.innerHTML=matches.map((f,i)=>`<div data-i="${f.i}">${f.t}<small>${f.g.slice(0,2).join(' · ')}</small></div>`).join('');sg.style.display=matches.length?'block':'none';
+ sg.querySelectorAll('div').forEach(d=>d.onclick=()=>{q.value=byId.get(+d.dataset.i).t;sg.style.display='none';show(+d.dataset.i)});});
+q.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){sel=Math.min(sel+1,matches.length-1)}else if(e.key==='ArrowUp'){sel=Math.max(sel-1,0)}else if(e.key==='Enter'){const f=matches[sel>=0?sel:0];if(f){q.value=f.t;sg.style.display='none';show(f.i)}return}else return;sg.querySelectorAll('div').forEach((d,i)=>d.classList.toggle('on',i===sel));});
+document.addEventListener('click',e=>{if(!e.target.closest('.search'))sg.style.display='none'});
+// draw
+const cv=$('cv'),ctx=cv.getContext('2d');let drawing=false,path=[];
+function cvPos(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]}
+function redraw(){ctx.clearRect(0,0,cv.width,cv.height);ctx.strokeStyle='#8a94a1';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,cv.height/2);ctx.lineTo(cv.width,cv.height/2);ctx.stroke();ctx.setLineDash([]);
+ if(path.length>1){ctx.strokeStyle='#2F5BAA';ctx.lineWidth=3;ctx.beginPath();path.forEach(([x,y],i)=>i?ctx.lineTo(x*cv.width,y*cv.height):ctx.moveTo(x*cv.width,y*cv.height));ctx.stroke();}}
+cv.addEventListener('pointerdown',e=>{drawing=true;path=[cvPos(e)];cv.setPointerCapture(e.pointerId)});cv.addEventListener('pointermove',e=>{if(!drawing)return;const p=cvPos(e);if(p[0]>=path[path.length-1][0])path.push(p);redraw()});cv.addEventListener('pointerup',()=>drawing=false);
+$('drawclear').onclick=()=>{path=[];redraw();$('drawmsg').textContent=''};
+$('drawbtn').onclick=()=>{const d=$('drawpanel');d.style.display=d.style.display==='block'?'none':'block';redraw();};
+$('drawgo').onclick=()=>{if(path.length<5){$('drawmsg').textContent='draw a line left to right first';return}
+ const v=[...Array(T)].map((_,i)=>{const x=xs(i);let best=path[0];for(const p of path){if(Math.abs(p[0]-x)<Math.abs(best[0]-x))best=p}return 1-best[1]});
+ const sc=IDX.map(f=>({f,score:corr(sm(f.fa),v)})).sort((a,b)=>b.score-a.score).slice(0,12);$('drawmsg').textContent='';results('Films whose fortune follows your line',sc);};
+// sliders
+const S={reveal:['early','mid','late','last page'],end:['badly','mixed','well','happily'],build:['flat','gentle','steady','relentless'],irony:['we learn with the hero','balanced','we know more','we know much more'],stakes:['modest','moderate','high','life or death']};
+function sliders(){const g={reveal:+$('s_reveal').value/100,end:+$('s_end').value/100,build:(+$('s_build').value/100)*0.45-0.1,irony:+$('s_irony').value/100*0.9,stakes:0.4+(+$('s_stakes').value/100)*0.6};
+ for(const k of Object.keys(S))$('v_'+k).textContent=S[k][Math.min(3,Math.floor(+$('s_'+k).value/25.01))];
+ const sc=IDX.map(f=>({f,score:-(Math.abs(f.f.reveal_pos-g.reveal)+Math.abs(f.f.ending_fortune-g.end)+Math.abs(f.f.tension_build-g.build)*1.5+Math.abs(f.f.irony-g.irony)+Math.abs(f.f.stakes-g.stakes))})).sort((a,b)=>b.score-a.score).slice(0,8);
+ $('slist').innerHTML=sc.map(({f})=>`<div class="res" data-go="${f.i}"><b>${f.t}</b><small>${f.g.slice(0,3).join(' · ')}</small><div class="sub">${f.p.slice(0,2).join(', ')}</div></div>`).join('');
+ $('slist').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{q.value=byId.get(+b.dataset.go).t;show(+b.dataset.go);window.scrollTo({top:0,behavior:'smooth'})});}
+['s_reveal','s_end','s_build','s_irony','s_stakes'].forEach(id=>$(id).addEventListener('input',sliders));
+loadIndex().then(()=>{sliders();const start=IDX.find(f=>f.t==='Get Out')||IDX[0];q.value=start.t;show(start.i);});
+</script>
+</body>
+</html>
