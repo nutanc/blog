@@ -7,6 +7,8 @@ series: "Translation From Scratch"
 part: 6
 ---
 
+> **Update, October 2026.** This post was written in August. The series continues in parts 7–11, and some of what's below turned out to be wrong in an instructive way. Word order was *not* the weak link: the missing piece was Hindi's grammatical glue (auxiliaries, light verbs, case markers), which the training data had been [hiding inside the slots](/posts/the-glue-was-hidden/). With that fixed, five times the data and a judge in the loop, the system now [matches a 12B LLM on chrF](/posts/more-data-and-how-close-we-are/) (47.5 vs 47.8) and gets about half of conversational sentences right, against nearly all for the LLM. Start with [part 7](/posts/getting-the-words-right/) for the rest of the story.
+
 Let me be blunt up front: this system does not beat Google Translate, or an LLM, or a modern NMT model, on translation quality. If you want the best Hindi for an arbitrary English sentence, use one of those. So why build it?
 
 Because "quality on high-resource pairs" is one axis, and the black-box systems that win it are bad at almost everything else you might want from a translator. This post is about the axes they're bad at, where a structure-first pipeline is *good*, and where it should go next.
