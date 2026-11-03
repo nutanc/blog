@@ -5,8 +5,6 @@ date: 2026-11-03
 permalink: /posts/reading-the-weights/
 ---
 
-*November 2026 · Ozonetel AI experiments*
-
 **TL;DR.** The [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/) post fixed a small model's
 maths by deleting a single direction from its weights, and reported that the same move did nothing for a different small model
 whose errors were "ordinary". We tried the idea on two of our own models: a 4B English→Hindi translator and a 270M children's-story
@@ -211,9 +209,3 @@ differences agree across examples, edit; if they do not, put the information in 
 - **The story edit is a constant shift in layer 8**, not a change to stored weights: Gemma-3 has no bias terms to absorb it, so it
   runs as an inference hook.
 - **Small samples in places**: 86 translation errors, 18 usable patching pairs, 100 openings per story arm.
-
----
-
-*Code and reports: `scaffold_translate/src/{distort_probe,spanpass,learnloop,wsp_locate,wsp_probe,wsp_patch,wsp_caa,wsp_gen}.py` and
-`out/{distort,spanpass,wsp}/`; `story_axes/src/wsp_story.py` and `out/wsp_story/`. Evaluation text is public WMT14 news and our own
-synthetic conversational benchmark; no customer data.*
